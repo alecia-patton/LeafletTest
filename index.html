@@ -16,9 +16,8 @@
 			}
 
 		</style>
-		<link rel="stylesheet" href="Leaflet/leaflet.css" />
-		<script type="text/javascript" src="Leaflet/leaflet.js"></script>
-		<script src="Ajax/dist/leaflet.ajax.min.js"></script>
+		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+		<script src="https://raw.github.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
 	</head>
 	<body>
 		<div id="cupcake-map"></div>
@@ -28,8 +27,7 @@
 			});
 
 			
-			var geojsonLayer = new L.GeoJSON.AJAX("cupcakes.json");
-
+			var geojsonLayer = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json');
 			var map = L.map('cupcake-map').setView([34.8703, -92.1153], 13);
 			cupcakeTiles.addTo(map);
 			geojsonLayer.addTo(map);
