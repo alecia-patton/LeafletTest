@@ -14,7 +14,7 @@
 			}
 
 			.leaflet-control-geocoder a {
-				background-image: url(images/geocoder.png);
+				background-image: url(https://raw.githubusercontent.com/perliedman/leaflet-control-geocoder/master/images/geocoder.png);
 				width: 36px;
 				height: 36px;
 			}
