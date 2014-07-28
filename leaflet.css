@@ -300,7 +300,7 @@
 	}
 .leaflet-retina .leaflet-control-layers-toggle {
 	background-image: url(images/layers-2x.png);
-	background-size: 26px 26px;
+	background-size: 100px 100px;
 	}
 .leaflet-touch .leaflet-control-layers-toggle {
 	width: 100px;
@@ -315,7 +315,7 @@
 	position: relative;
 	}
 .leaflet-control-layers-expanded {
-	padding: 15px 19px 15px 15px;
+	padding: 100px 100px 100px 100px;
 	color: #333;
 	background: #fff;
 	}
@@ -367,7 +367,7 @@
 	border-top: none;
 	line-height: 1.1;
 	padding: 20px 50px 10px;
-	font-size: 11px;
+	font-size: 50px;
 	white-space: nowrap;
 	overflow: hidden;
 	-moz-box-sizing: content-box;
