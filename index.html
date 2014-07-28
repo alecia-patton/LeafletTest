@@ -16,7 +16,7 @@
 			}
 
 		</style>
-		
+
 		<link rel="stylesheet" href="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.css"/>
 		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 		<script src="https://cdn.rawgit.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
@@ -29,29 +29,49 @@
 				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			});
 
-			function popUp(feature,layer){layer.bindPopup("<b>GPS Time:</b> " + feature.properties.gps_date + "<br><b>GNSS Time: </b>" + feature.properties.gps_time);}
+			function popUp(feature, layer) {
+				layer.bindPopup("<b>GPS Time:</b> " + feature.properties.gps_date + "<br><b>GNSS Time: </b>" + feature.properties.gps_time);
+			}
 
-			var geojsonFeature = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json', {onEachFeature:popUp});
+			var geojsonFeature = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json', {
+				onEachFeature : popUp
+			});
 			var map = L.map('mapDiv').setView([34.8703, -92.1153], 13);
 			tiles.addTo(map);
 
 			geojsonFeature.addTo(map);
 			//search for attributes specified after "propertyName:"
-			var searchControl = new L.Control.Search({layer: geojsonFeature, propertyName: 'gnss_heigh',circleLocation:false});
-			searchControl.on('search_locationfound', function(e){
-				
+			var searchControl = new L.Control.Search({
+				layer : geojsonFeature,
+				propertyName : 'gnss_heigh',
+				circleLocation : false
+			});
+			searchControl.on('search_locationfound', function(e) {
+
 				map.fitBounds(e.layer.getBounds());
-				
-				e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-				
-			}).on('search_collapsed', function(e){
+
+				e.layer.setStyle({
+					fillColor : '#3f0',
+					color : '#0f0'
+				});
+
+			}).on('search_collapsed', function(e) {
 				geojsonFeature.eachLayer(function(layer) {
-					
-				geojsonFeature.resetStyle(layer);
+
+					geojsonFeature.resetStyle(layer);
 				});
 			});
 			map.addControl(searchControl);
 
+			var baseLayers = {
+				"BaseMap": tiles
+			};
+			
+			var overlays = {
+				"TracerWire" : geojsonFeature
+			};
+
+			L.control.layers(baseLayers,overlays).addTo(map);
 		</script>
 	</body>
 </html>
