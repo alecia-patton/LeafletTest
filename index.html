@@ -3,10 +3,16 @@
 <html>
 	<!--
 	Leaflet Map
+	Created By: Alecia Patton and Sam Fry
+	Modified: 7/28/2014
+	Purpose: To create a custom mobile mapping application for Jacksonville Wastewater that displays the gravity pipe, manholes, force mains,
+	and pumpstations.  It will allow users to search and zoom across the map based ona a specific manhole ID or address.  It will also allow
+	users to turn layers on and off.
 
 	-->
-	<head>
 
+	<head>
+		<!--Scripts and CSS -->
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 		<!--[if lte IE 8]>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
@@ -22,80 +28,86 @@
 			}
 
 		</style>
-
+		<!-- This section brings in the leaflet Javascript and CSS files -->
 		<link rel="stylesheet" href="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.css"/>
 		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
-		<script src="https://cdn.rawgit.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+		<!--This section brings in the Leaflet-search Javascript which allows you to search the properties of GeoJSONs -->
 		<script type="text/javascript" src="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.js"></script>
+		<!--This section brings in the OSMGeocoder Javascript and CSS files which allow you to search the Open Street Map addressing system -->
 		<script type="text/javascript" src="https://cdn.rawgit.com/alecia-patton/LeafletTest/master/Control.OSMGeocoder.js"></script>
+		<!--This section brings in the AJAX Javascript which allows GeoJSONs to be imported -->
 		<script type="text/javascript" src="https://cdn.rawgit.com/alecia-patton/LeafletTest/master/leaflet.ajax.min.js"></script>
+		<!--This section brings in the ESRI Leaflet Javascript which allows you to use the ESRI web tiling service which gives us access to Pagis basemap -->
+		<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
+
 	</head>
+
 	<body>
+		<!-- This creates a division to host the map -->
 		<div id="mapDiv"></div>
+		<!--Beginning of Leaflet Javascript -->
 		<script>
+			//Creates a variable to house the tiling service which serves as the basemap.
 			var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			});
 
+			//Gravity Pipe Popus and GeoJSON
+			//Creates a function that styles the popup window for the gravitypipe GeoJSON.
 			function popUpgravitypipe(feature, layer) {
-				layer.bindPopup("<b>ID: </b> " + feature.properties.id + "<br><b>Old ID: </b>" + feature.properties.oldpipeid);
+				layer.bindPopup("<b>ID: </b> " + feature.properties.id + "<br><b>Old ID: </b>" + feature.properties.oldpipeid + "<br><b>Length: </b> " + feature.properties.length + "<hr>" + "<br><b>Material: </b> " + feature.properties.type + "<br><b>Size: </b> " + feature.properties.size + "<br><b>Depth Upstream: </b> " + feature.properties.depth_up + "<br><b>Depth Downstream: </b> " + feature.properties.depth_ds + "<hr>" + "<br><b>Televising Date: </b> " + feature.properties.tv + "<br>" + '<a href="' + feature.properties.drive + '">Televising Report</a>' + "<hr>" + "<br><b>Owner: </b> " + feature.properties.owner);
 			}
 
+			//Creates a variable to grab GeoJSON from GitHub repository and calls the popUpgravitypipe function to occur on each click.
 			var gravitypipe = new L.GeoJSON.AJAX('https://cdn.rawgit.com/alecia-patton/LeafletTest/master/gravitypipe.geojson', {
 				onEachFeature : popUpgravitypipe
 			});
 
+			//Manholes Popus and GeoJSONs
+
+			//Creates a function that styles the popup window for the manholes GeoJSON.
 			function popUpmanholes(feature, layer) {
-				layer.bindPopup("<b>ID: </b> " + feature.properties.mh_num + "<br><b>Old ID: </b>" + feature.properties.old_id);
+				layer.bindPopup("<b>ID: </b> " + feature.properties.mh_num + "<br><b>Old ID: </b>" + feature.properties.old_id + "<br><b>Old ID: </b>" + feature.properties.old_id_2 + "<hr>" + "<br><b>Type: </b> " + feature.properties.type + "<br><b>Depth: </b> " + feature.properties.depth + "<br><b>Drop Present: </b> " + feature.properties.drop + "<hr>" + "<br><b>Inspection Date: </b> " + feature.properties.inspection + "<br>" + '<a href="' + feature.properties.drive + '">Televising Report</a>' + "<hr>" + "<br><b>Owner: </b> " + feature.properties.owner);
 			}
 
+			//Creates a variable to grab GeoJSON from GitHub repository and calls the popUpmanholes function to occur on each click.
 			var manholes = new L.GeoJSON.AJAX('https://cdn.rawgit.com/alecia-patton/LeafletTest/master/manholes.geojson', {
 				onEachFeature : popUpmanholes
 			});
 
-			
+			//Actual Map
+			//Creates a map variable to be hosted in the division created earlier and sets the lat/long to center on Jacksonville at specified zoom level.
 			var map = L.map('mapDiv').setView([34.8703, -92.1153], 13);
+
+			//Adds tiling service to map based on tiles variable.
 			tiles.addTo(map);
-			
-			map.on('zoomend ', function(e) {
-				if (map.getZoom() <= 17) {
-					map.removeLayer(manholes)
-				} else if (map.getZoom() > 17) {
-					map.addLayer(manholes)
-					var searchControl = new L.Control.Search({
-				layer : manhole,
-				propertyName : 'mh_num',
-				circleLocation : false,
-				zoom : 18
-			});
-			searchControl.on('search_locationfound', function(e) {
 
-				//map.setView(e.properties.coordinates, 1);
+			//Not Using!!!
+			//Manhole Scaling
+			//map.on('zoomend ', function(e) {
+			//if (map.getZoom() <= 17) {
+			//map.removeLayer(manholes)
+			//} else if (map.getZoom() > 17) {
+			//map.addLayer(manholes)
 
-				e.layer.setStyle({
-					fillColor : '#3f0',
-					color : '#0f0'
-				});
+			//Add GeoJSONs to map
+			//manholes.addTo(map);
+			//gravitypipe.addTo(map);
 
-			}).on('search_collapsed', function(e) {
-				manhole.eachLayer(function(layer) {
+			//Not using!!!
+			//Gravity Pipe Scaling
+			//map.on('zoomend ', function(e) {
+			//if (map.getZoom() <= 17) {
+			//map.removeLayer(gravitypipe)
+			//} else if (map.getZoom() > 17) {
+			//	map.addLayer(gravitypipe)
+			//	}
+			//});
 
-					manhole.resetStyle(layer);
-				});
-			});
-			map.addControl(searchControl);
-				}
-			});
-
-			map.on('zoomend ', function(e) {
-				if (map.getZoom() <= 17) {
-					map.removeLayer(gravitypipe)
-				} else if (map.getZoom() > 17) {
-					map.addLayer(gravitypipe)
-				}
-			});
-
+			//OSM Geocoder
+			//Create boundary variable to only search addresses within specified parameteres.  To be used when setting options for Geocoder.
 			var boundary = new L.LatLngBounds([[34.9703, -92.0153], [34.7703, -92.2153]]);
+			//Sets options for how the geocoder appears in map. To be used when adding control to map.
 			var options = {
 				collapsed : true,
 				position : 'bottomright',
@@ -110,16 +122,50 @@
 				}
 			};
 
+			//Creates the variable for OSMGeocoder to be added to map with specified options.
 			var osmGeocoder = new L.Control.OSMGeocoder(options);
+			//Addres OSMGeocoder to map variable.
 			map.addControl(osmGeocoder);
-			
 
+			//Legend
+			//Creates variable to be used when adding legend to map.  Creates two layers based on GeoJSONs.
 			var overlays = {
-				"Gravity Pipe" : gravitypipe,
-				"Manholes" : manholes
+				"Manholes" : manholes,
+				"Gravity Pipe" : gravitypipe
 			};
 
-			L.control.layers("", overlays).addTo(map);
+			var legendOptions = {
+				collapsed : false
+			};
+
+			//Adds legend control to map using overlays variable.  First one is a radio button.
+			L.control.layers("", overlays, legendOptions).addTo(map);
+
+			//Searches Manhole GeoJSON based on manhole ID.
+			var searchControl = new L.Control.Search({
+				layer : manholes,
+				propertyName : 'mh_num',
+				circleLocation : false,
+				zoom : 18,
+				collapsed : false
+			});
+			searchControl.on('search_locationfound', function(e) {
+
+				//map.setView(e.properties.coordinates, 1);
+
+				e.layer.setStyle({
+					fillColor : '#3f0',
+					color : '#0f0'
+				});
+
+			}).on('search_collapsed', function(e) {
+				manholes.eachLayer(function(layer) {
+
+					manholes.resetStyle(layer);
+				});
+			});
+			map.addControl(searchControl);
+			map.removeLayer(manholes);
 
 		</script>
 	</body>
