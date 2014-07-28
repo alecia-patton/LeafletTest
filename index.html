@@ -25,12 +25,14 @@
 			var cupcakeTiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			});
-
 			
-			var geojsonLayer = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json');
+			function popUp(feature,layer){layer.bindPopup("<b>GPS Time:</b> " + feature.properties.gps_date + "<br><b>GNSS Time: </b>" + feature.properties.gps_time);}
+			
+			var geojsonFeature = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json', {onEachFeature:popUp});
 			var map = L.map('cupcake-map').setView([34.8703, -92.1153], 13);
 			cupcakeTiles.addTo(map);
-			geojsonLayer.addTo(map);
+
+			geojsonFeature.addTo(map);
 
 		</script>
 	</body>
