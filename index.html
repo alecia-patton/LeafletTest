@@ -11,28 +11,46 @@
 				margin: 0;
 			}
 
-			html, body, #cupcake-map {
+			html, body, #mapDiv {
 				height: 100%;
 			}
 
 		</style>
+		
+		<link rel="stylesheet" href="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.css"/>
 		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
-		<script src="https://raw.github.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+		<script src="https://cdn.rawgit.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+		<script type="text/javascript" src="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.js"></script>
 	</head>
 	<body>
-		<div id="cupcake-map"></div>
+		<div id="mapDiv"></div>
 		<script>
-			var cupcakeTiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			});
-			
+
 			function popUp(feature,layer){layer.bindPopup("<b>GPS Time:</b> " + feature.properties.gps_date + "<br><b>GNSS Time: </b>" + feature.properties.gps_time);}
-			
+
 			var geojsonFeature = new L.GeoJSON.AJAX('https://rawgit.com/alecia-patton/LeafletTest/master/cupcakes.json', {onEachFeature:popUp});
-			var map = L.map('cupcake-map').setView([34.8703, -92.1153], 13);
-			cupcakeTiles.addTo(map);
+			var map = L.map('mapDiv').setView([34.8703, -92.1153], 13);
+			tiles.addTo(map);
 
 			geojsonFeature.addTo(map);
+			//search for attributes specified after "propertyName:"
+			var searchControl = new L.Control.Search({layer: geojsonFeature, propertyName: 'gnss_heigh',circleLocation:false});
+			searchControl.on('search_locationfound', function(e){
+				
+				map.fitBounds(e.layer.getBounds());
+				
+				e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+				
+			}).on('search_collapsed', function(e){
+				geojsonFeature.eachLayer(function(layer) {
+					
+				geojsonFeature.resetStyle(layer);
+				});
+			});
+			map.addControl(searchControl);
 
 		</script>
 	</body>
