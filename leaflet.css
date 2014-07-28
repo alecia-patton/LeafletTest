@@ -295,8 +295,8 @@
 	}
 .leaflet-control-layers-toggle {
 	background-image: url(images/layers.png);
-	width: 36px;
-	height: 36px;
+	width: 100px;
+	height: 100px;
 	}
 .leaflet-retina .leaflet-control-layers-toggle {
 	background-image: url(images/layers-2x.png);
@@ -320,7 +320,7 @@
 	background: #fff;
 	}
 .leaflet-control-layers-selector {
-	margin-top: 2px;
+	margin-top: 15px;
 	position: relative;
 	top: 1px;
 	}
@@ -329,8 +329,8 @@
 	}
 .leaflet-control-layers-separator {
 	height: 0;
-	border-top: 1px solid #ddd;
-	margin: 5px -10px 5px -6px;
+	border-top: 15px solid #ddd;
+	margin: 10px -10px 10px -6px;
 	}
 
 
