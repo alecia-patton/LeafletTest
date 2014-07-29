@@ -29,7 +29,7 @@
 
 		</style>
 		<style>
-			.leaflet-control-layers-expanded{
+			.leaflet-control-layers-expanded {
 				width: 150px;
 				background-position: 3px 50%;
 				padding: 3px;
@@ -39,6 +39,19 @@
 				font-size: 20px;
 			}
 		</style>
+		<style>
+			.leaflet-control-search.search-exp {
+				width: 200px;
+				height: 50px;
+			}
+		</style>
+		<style>
+			.search-input {
+				width: 130px;
+				height: 30px;
+			}
+		</style>
+
 		<!-- This section brings in the leaflet Javascript and CSS files -->
 		<link rel="stylesheet" href="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.css"/>
 		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
@@ -48,19 +61,27 @@
 		<script type="text/javascript" src="https://cdn.rawgit.com/alecia-patton/LeafletTest/master/Control.OSMGeocoder.js"></script>
 		<!--This section brings in the AJAX Javascript which allows GeoJSONs to be imported -->
 		<script type="text/javascript" src="https://cdn.rawgit.com/alecia-patton/LeafletTest/master/leaflet.ajax.min.js"></script>
-		<!--This section brings in the ESRI Leaflet Javascript which allows you to use the ESRI web tiling service which gives us access to Pagis basemap -->
+		<!--This section brings in the ESRI Leaflet Javascript which allows you to use the ESRI web tiling service which gives us access to Pagis basemap  and ESRI Geocoding-->
 		<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
+		<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css"/>
 
 	</head>
 
 	<body>
 		<!-- This creates a division to host the map -->
 		<div id="mapDiv"></div>
+		<div class='error' style='display:none'>
+			Event Created
+		</div>
 		<!--Beginning of Leaflet Javascript -->
 		<script>
 			//Creates a variable to house the tiling service which serves as the basemap.
-			var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			var tiles = L.esri.tiledMapLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer", {
+				maxZoom : 19
 			});
 
 			//Gravity Pipe Popus and GeoJSON
@@ -82,71 +103,57 @@
 			}
 
 			//Creates a variable to grab GeoJSON from GitHub repository and calls the popUpmanholes function to occur on each click.
-			var manholes = new L.GeoJSON.AJAX('https://cdn.rawgit.com/alecia-patton/LeafletTest/master/manholes.geojson', {
-				onEachFeature : popUpmanholes
-			});
+			var manholeMarkerOptions = {
+            radius : 6,
+            fillColor : "#BF000C",
+            color : "#BF000C",
+            weight : 1,
+            opacity : 100,
+            fillOpacity: 100
+        };
+
+        //Creates a variable to grab GeoJSON from GitHub repository and calls the popUpmanholes function to occur on each click.
+        var manholes = new L.GeoJSON.AJAX('https://cdn.rawgit.com/alecia-patton/LeafletTest/master/manholes.geojson', {
+            onEachFeature : popUpmanholes,
+            pointToLayer : function(feature, latlng) {
+                return L.circleMarker(latlng, manholeMarkerOptions);
+            }
+        });
 
 			//Actual Map
 			//Creates a map variable to be hosted in the division created earlier and sets the lat/long to center on Jacksonville at specified zoom level.
-			var map = L.map('mapDiv').setView([34.8703, -92.1153], 13);
+			var map = L.map('mapDiv').setView([34.843676, -92.128687], 18);
 
 			//Adds tiling service to map based on tiles variable.
 			tiles.addTo(map);
 
-			//Not Using!!!
-			//Manhole Scaling
-			//map.on('zoomend ', function(e) {
-			//if (map.getZoom() <= 17) {
-			//map.removeLayer(manholes)
-			//} else if (map.getZoom() > 17) {
-			//map.addLayer(manholes)
-
-			//Add GeoJSONs to map
-			//manholes.addTo(map);
-			//gravitypipe.addTo(map);
-
-			//Not using!!!
-			//Gravity Pipe Scaling
-			//map.on('zoomend ', function(e) {
-			//if (map.getZoom() <= 17) {
-			//map.removeLayer(gravitypipe)
-			//} else if (map.getZoom() > 17) {
-			//	map.addLayer(gravitypipe)
-			//	}
-			//});
-
-			//OSM Geocoder
-			//Create boundary variable to only search addresses within specified parameteres.  To be used when setting options for Geocoder.
-			var boundary = new L.LatLngBounds([[34.9703, -92.0153], [34.7703, -92.2153]]);
-			//Sets options for how the geocoder appears in map. To be used when adding control to map.
-			var options = {
-				collapsed : true,
-				position : 'bottomright',
-				text : 'Address',
-				placeholder : 'Search...',
-				showResultIcons : true,
-				bounds : boundary,
-				email : null,
-				callback : function(results) {
-					var bbox = results[0].boundingbox, first = new L.LatLng(bbox[0], bbox[2]), second = new L.LatLng(bbox[1], bbox[3]), bounds = new L.LatLngBounds([first, second]);
-					this._map.fitBounds(bounds);
-				}
-			};
-
-			//Creates the variable for OSMGeocoder to be added to map with specified options.
-			var osmGeocoder = new L.Control.OSMGeocoder(options);
-			//Addres OSMGeocoder to map variable.
-			map.addControl(osmGeocoder);
-
 			//Legend
 			//Creates variable to be used when adding legend to map.  Creates two layers based on GeoJSONs.
+
+			//ESRI Geocoding
+			var geocoderOption = {
+				expanded : false,
+			};
+
+			var searchControl = new L.esri.Controls.Geosearch(geocoderOption).addTo(map);
+
+			var results = new L.LayerGroup().addTo(map);
+
+			searchControl.on('results', function(data) {
+				results.clearLayers();
+				for (var i = data.results.length - 1; i >= 0; i--) {
+					results.addLayer(L.marker(data.results[i].latlng));
+				}
+			});
+
+			//Creates legend variables.
 			var overlays = {
 				"Manholes" : manholes,
 				"Gravity Pipe" : gravitypipe
 			};
 
 			var legendOptions = {
-				collapsed : false
+				collapsed : true
 			};
 
 			//Adds legend control to map using overlays variable.  First one is a radio button.
@@ -157,9 +164,10 @@
 				layer : manholes,
 				propertyName : 'mh_num',
 				circleLocation : false,
-				position: 'topright',
-				zoom : 18,
-				collapsed : false
+				position : 'topleft',
+				zoom : 19,
+				collapsed : true
+
 			});
 			searchControl.on('search_locationfound', function(e) {
 
@@ -177,8 +185,13 @@
 				});
 			});
 			map.addControl(searchControl);
-			map.removeLayer(manholes);
-
+			function onMapClick(e) {
+				
+			}
+			
+			map.addLayer(gravitypipe);
+			map.addLayer(manholes);
 		</script>
 	</body>
 </html>
+
