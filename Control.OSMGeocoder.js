@@ -44,7 +44,7 @@ L.Control.OSMGeocoder = L.Control.extend({
 
 		var submit = document.createElement('input');
 		submit.type = "submit";
-		submit.value = (this.options.text).fontsize(20);
+		submit.value = (this.options.text).fontsize(200);
 
 		form.appendChild(input);
 		form.appendChild(submit);
