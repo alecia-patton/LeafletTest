@@ -29,6 +29,12 @@
 
 		</style>
 		<style>
+			.leaflet-top.leaflet-left{
+				margin-left:15px;
+				height=150px;
+			}
+		</style>
+		<style>
 			.leaflet-control-layers-expanded {
 				width: 150px;
 				background-position: 3px 50%;
@@ -42,18 +48,25 @@
 		<style>
 			.leaflet-control-search.search-exp {
 				width: 200px;
-				height: 50px;
 			}
 		</style>
 		<style>
 			.search-input {
+				
 				width: 130px;
 				height: 30px;
+			}
+		</style>
+		<style>
+			.leaflet-top.leaflet-right {
+				margin-right: 15px;
 			}
 		</style>
 
 		<!-- This section brings in the leaflet Javascript and CSS files -->
 		<link rel="stylesheet" href="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.css"/>
+		
+		<script>L_PREFER_CANVAS</script>
 		<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 		<!--This section brings in the Leaflet-search Javascript which allows you to search the properties of GeoJSONs -->
 		<script type="text/javascript" src="https://cdn.rawgit.com/stefanocudini/leaflet-search/master/dist/leaflet-search.src.js"></script>
@@ -65,17 +78,13 @@
 		<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
 		<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
 		<link rel="stylesheet" type="text/css" href="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css"/>
+		
 
 	</head>
 
 	<body>
 		<!-- This creates a division to host the map -->
 		<div id="mapDiv"></div>
-		<div class='error' style='display:none'>
-			Event Created
 		</div>
 		<!--Beginning of Leaflet Javascript -->
 		<script>
@@ -122,7 +131,7 @@
 
 			//Actual Map
 			//Creates a map variable to be hosted in the division created earlier and sets the lat/long to center on Jacksonville at specified zoom level.
-			var map = L.map('mapDiv').setView([34.843676, -92.128687], 18);
+			var map = L.map('mapDiv').setView([34.843676, -92.128687], 15);
 
 			//Adds tiling service to map based on tiles variable.
 			tiles.addTo(map);
@@ -188,9 +197,9 @@
 			function onMapClick(e) {
 				
 			}
-			
-			map.addLayer(gravitypipe);
 			map.addLayer(manholes);
+			map.addLayer(gravitypipe);
+			
 		</script>
 	</body>
 </html>
