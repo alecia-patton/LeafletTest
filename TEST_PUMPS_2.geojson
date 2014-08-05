@@ -1,0 +1,21 @@
+{
+"type": "FeatureCollection",
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "id": null, "name": "SOUTHEASTERN" }, "geometry": { "type": "Point", "coordinates": [ 1284421.6250953912, 178507.5376863555 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "DOGGIE RD" }, "geometry": { "type": "Point", "coordinates": [ 1279736.1305249906, 178427.72361527145 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "CLYDE LANE" }, "geometry": { "type": "Point", "coordinates": [ 1277018.5402309035, 181391.48284715554 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "VALENTINE" }, "geometry": { "type": "Point", "coordinates": [ 1275566.5461040726, 182830.29113921418 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "GUN CLUB" }, "geometry": { "type": "Point", "coordinates": [ 1271949.6872212663, 178465.57426545839 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "SOUTH JACKSONVILLE" }, "geometry": { "type": "Point", "coordinates": [ 1271414.1829515151, 182025.91302961946 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "DOUBLE A" }, "geometry": { "type": "Point", "coordinates": [ 1270167.3255720371, 180799.38783746195 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "EAST" }, "geometry": { "type": "Point", "coordinates": [ 1286019.9040203998, 196980.48403062491 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "GAME AND FISH" }, "geometry": { "type": "Point", "coordinates": [ 1288984.1630586025, 194743.79460606715 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "OAK RIDGE" }, "geometry": { "type": "Point", "coordinates": [ 1282310.1690141736, 212509.89039596339 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "GENERAL SAMUELS" }, "geometry": { "type": "Point", "coordinates": [ 1268331.9798298085, 198471.82196349261 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "HARRIS" }, "geometry": { "type": "Point", "coordinates": [ 1265112.4565040977, 199467.34443860824 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "BASE MEADOWS" }, "geometry": { "type": "Point", "coordinates": [ 1259354.3637612462, 199964.44842701071 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "NORTHLAKE" }, "geometry": { "type": "Point", "coordinates": [ 1261631.0448950541, 191608.55174168249 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "WALNUT POINT" }, "geometry": { "type": "Point", "coordinates": [ 1259947.2575481713, 190782.89635133641 ] } }
+]
+}
